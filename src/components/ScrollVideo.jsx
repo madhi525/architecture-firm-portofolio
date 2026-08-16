@@ -34,57 +34,70 @@ export default function ScrollVideo({
       const video = videoRef.current
       if (!video) return
 
-      let scrubTween = null
+      let scrubTrigger = null
 
-      const onLoaded = () => {
-        if (scrubTween) return
+      const initScrub = () => {
+        if (scrubTrigger) return
+
+        const duration = video.duration
+        if (!Number.isFinite(duration) || duration <= 0) return
 
         video.pause()
         video.currentTime = 0
 
-        scrubTween = gsap.to(video, {
-          currentTime: video.duration,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: scope.current,
-            start: 'top top',
-            end: () => `+=${video.duration * scrollFactor * 100}%`,
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              if (!video.paused) video.pause()
+        scrubTrigger = ScrollTrigger.create({
+          trigger: scope.current,
+          start: 'top top',
+          end: () => `+=${duration * scrollFactor * 100}%`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (!video.paused) video.pause()
 
-              if (progressRef.current && !Number.isNaN(video.duration)) {
-                const pct = Math.round(self.progress * 100)
-                progressRef.current.textContent = `${String(pct).padStart(2, '0')}%`
-              }
+            video.currentTime = duration * self.progress
+
+            if (progressRef.current && !Number.isNaN(duration)) {
+              const pct = Math.round(self.progress * 100)
+              progressRef.current.textContent = `${String(pct).padStart(2, '0')}%`
+            }
 
               const active =
-                CHAPTERS.find(
-                  (c) => self.progress >= c.from && self.progress < c.to,
-                ) ?? CHAPTERS[CHAPTERS.length - 1]
+              CHAPTERS.find(
+                (c) => self.progress >= c.from && self.progress < c.to,
+              ) ?? CHAPTERS[CHAPTERS.length - 1]
 
-              if (active.id !== activeChapterRef.current) {
-                if (activeChapterRef.current) {
-                  gsap.to(
-                    scope.current.querySelector(
-                      `[data-chapter="${activeChapterRef.current}"]`,
-                    ),
-                    { opacity: 0, y: 12, duration: 0.25, ease: 'power2.out' },
-                  )
-                }
-                gsap.fromTo(
-                  scope.current.querySelector(`[data-chapter="${active.id}"]`),
-                  { opacity: 0, y: 12 },
-                  { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+            if (active.id !== activeChapterRef.current) {
+              if (activeChapterRef.current) {
+                gsap.to(
+                  scope.current.querySelector(
+                    `[data-chapter="${activeChapterRef.current}"]`,
+                  ),
+                  { opacity: 0, y: 12, duration: 0.25, ease: 'power2.out' },
                 )
-                activeChapterRef.current = active.id
               }
-            },
+              gsap.fromTo(
+                scope.current.querySelector(`[data-chapter="${active.id}"]`),
+                { opacity: 0, y: 12 },
+                { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+              )
+              activeChapterRef.current = active.id
+            }
           },
         })
+      }
+
+      const onLoaded = () => {
+        const unlock = video.play()
+        if (unlock) {
+          unlock.then(() => {
+            video.pause()
+            initScrub()
+          }).catch(initScrub)
+        } else {
+          initScrub()
+        }
       }
 
       const barsIn = () => {
@@ -128,7 +141,7 @@ export default function ScrollVideo({
 
       return () => {
         video.removeEventListener('loadedmetadata', onLoaded)
-        scrubTween?.scrollTrigger?.kill(true)
+        scrubTrigger?.kill(true)
       }
     },
     { scope },
@@ -159,7 +172,7 @@ export default function ScrollVideo({
             src={src}
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             onError={() => setVideoError(true)}
             className="h-full w-full object-cover"
           />
