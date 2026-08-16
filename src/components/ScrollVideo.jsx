@@ -87,7 +87,6 @@ export default function ScrollVideo({
             playsInline
             preload="metadata"
             onError={() => setVideoError(true)}
-            onWheel={(e) => e.preventDefault()}
             className="h-full w-full object-cover"
           />
         )}
