@@ -10,20 +10,23 @@ const links = [
   { label: 'Kontak', href: '#kontak' },
 ]
 
-export default function Navbar() {
-  useGSAP(() => {
-    gsap.fromTo(
-      '[data-nav]',
-      { y: -32, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.6,
-      },
-    )
-  })
+export default function Navbar({ ready = false }) {
+  useGSAP(
+    () => {
+      if (!ready) return
+      gsap.fromTo(
+        '[data-nav]',
+        { y: -32, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+        },
+      )
+    },
+    { dependencies: [ready] },
+  )
 
   return (
     <header

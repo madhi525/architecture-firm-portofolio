@@ -2,11 +2,13 @@ import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 
-export default function Hero() {
+export default function Hero({ ready = false }) {
   const scope = useRef(null)
 
   useGSAP(
     () => {
+      if (!ready) return
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
 
       tl.fromTo(
@@ -27,7 +29,7 @@ export default function Hero() {
           '-=0.3',
         )
     },
-    { scope },
+    { scope, dependencies: [ready] },
   )
 
   return (
