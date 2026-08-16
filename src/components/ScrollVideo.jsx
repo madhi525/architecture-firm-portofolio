@@ -34,11 +34,15 @@ export default function ScrollVideo({
       const video = videoRef.current
       if (!video) return
 
+      let scrubTween = null
+
       const onLoaded = () => {
+        if (scrubTween) return
+
         video.pause()
         video.currentTime = 0
 
-        const tween = gsap.to(video, {
+        scrubTween = gsap.to(video, {
           currentTime: video.duration,
           ease: 'none',
           scrollTrigger: {
@@ -50,6 +54,8 @@ export default function ScrollVideo({
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
+              if (!video.paused) video.pause()
+
               if (progressRef.current && !Number.isNaN(video.duration)) {
                 const pct = Math.round(self.progress * 100)
                 progressRef.current.textContent = `${String(pct).padStart(2, '0')}%`
@@ -79,8 +85,6 @@ export default function ScrollVideo({
             },
           },
         })
-
-        return () => tween.scrollTrigger?.kill()
       }
 
       const barsIn = () => {
@@ -120,6 +124,11 @@ export default function ScrollVideo({
         onLoaded()
       } else {
         video.addEventListener('loadedmetadata', onLoaded, { once: true })
+      }
+
+      return () => {
+        video.removeEventListener('loadedmetadata', onLoaded)
+        scrubTween?.scrollTrigger?.kill(true)
       }
     },
     { scope },
