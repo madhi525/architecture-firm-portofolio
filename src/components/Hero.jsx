@@ -1,6 +1,9 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import Particles from './Particles.jsx'
+
+gsap.registerPlugin(useGSAP)
 
 export default function Hero({ ready = false }) {
   const scope = useRef(null)
@@ -36,61 +39,79 @@ export default function Hero({ ready = false }) {
     <section
       ref={scope}
       id="top"
-      className="relative flex min-h-svh flex-col justify-end overflow-hidden px-6 pt-32 pb-16 md:px-10"
+      className="relative flex min-h-svh flex-col justify-center overflow-hidden px-6 pt-28 pb-16 md:px-10"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(200,160,94,0.12),transparent_55%)]" />
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-14 md:grid-cols-2">
+        <div>
+          <p
+            data-hero-meta
+            className="mb-6 text-sm font-semibold tracking-[0.025em] text-saffron-spark uppercase"
+          >
+            Studio Arsitektur & Interior — Est. 2013
+          </p>
 
-      <p
-        data-hero-meta
-        className="mb-6 font-mono text-xs tracking-[0.35em] text-accent uppercase"
-      >
-        Studio Arsitektur — Est. 2013
-      </p>
-
-      <h1 className="text-[13vw] leading-[0.9] font-bold tracking-tight uppercase md:text-[9vw]">
-        <span className="block overflow-hidden">
-          <span data-hero-line className="block">
-            Merancang
-          </span>
-        </span>
-        <span className="block overflow-hidden">
-          <span data-hero-line className="block text-paper/40">
-            Ruang &
-          </span>
-        </span>
-        <span className="block overflow-hidden">
-          <span data-hero-line className="block">
-            <span className="text-accent">Narasi</span>
-          </span>
-        </span>
-      </h1>
-
-      <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
-        <p
-          data-hero-meta
-          className="max-w-md text-sm leading-relaxed text-paper/70"
-        >
-          Firma arsitektur yang bekerja di persimpangan antara material,
-          iklim, dan cara manusia menghuni tempat. Kami merancang bangunan
-          yang berbicara pelan — dan bertahan lama.
-        </p>
-        <div data-hero-meta className="flex gap-3">
-          {['JKT', 'BALI', 'DIY'].map((city) => (
-            <span
-              key={city}
-              className="rounded-full border border-white/15 px-4 py-1.5 font-mono text-[10px] tracking-widest"
-            >
-              {city}
+          <h1 className="text-[13vw] leading-[0.95] font-normal tracking-[-0.04em] uppercase md:text-[7.5vw]">
+            <span className="block overflow-hidden">
+              <span data-hero-line className="block">
+                Merancang
+              </span>
             </span>
-          ))}
+            <span className="block overflow-hidden">
+              <span data-hero-line className="block text-ash-gray">
+                Ruang &
+              </span>
+            </span>
+            <span className="block overflow-hidden">
+              <span data-hero-line className="block">
+                Narasi
+              </span>
+            </span>
+          </h1>
+
+          <p
+            data-hero-meta
+            className="mt-8 max-w-md text-lg leading-relaxed font-extralight text-ash-gray"
+          >
+            Firma arsitektur dengan dua sumber pendapatan: jasa desain
+            interior dan kurasi perabotan. Merancang ruang yang berbicara
+            pelan — dan mengisinya dengan furnitur yang bertahan lama.
+          </p>
+
+          <div
+            data-hero-meta
+            className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4"
+          >
+            <a
+              href="#kontak"
+              className="rounded-[24px] bg-electric-iris px-7 py-3 text-sm font-semibold tracking-[0.025em] text-white uppercase transition-opacity hover:opacity-80"
+            >
+              Mulai Proyek Desain
+            </a>
+            <a
+              href="#koleksi"
+              className="group text-sm font-semibold tracking-[0.025em] text-ash-gray uppercase transition-colors hover:text-bone-white"
+            >
+              Lihat Koleksi Perabotan
+              <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
+                →
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div
+          data-hero-meta
+          className="relative h-[42vh] min-h-[280px] md:h-[65vh]"
+        >
+          <Particles />
         </div>
       </div>
 
       <div
         data-hero-scroll
-        className="mt-14 flex items-center gap-3 font-mono text-[10px] tracking-[0.3em] text-paper/50 uppercase"
+        className="absolute bottom-8 left-6 flex items-center gap-3 text-[10px] font-light tracking-[0.3em] text-ash-gray uppercase md:left-10"
       >
-        <span className="h-px w-10 bg-paper/40" />
+        <span className="h-px w-10 bg-silver-mist" />
         Scroll
       </div>
     </section>

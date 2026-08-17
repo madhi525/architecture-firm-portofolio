@@ -1,13 +1,12 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger)
+gsap.registerPlugin(useGSAP)
 
 const links = [
+  { label: 'Koleksi', href: '#koleksi' },
   { label: 'Proyek', href: '#proyek' },
   { label: 'Tentang', href: '#tentang' },
-  { label: 'Kontak', href: '#kontak' },
 ]
 
 export default function Navbar({ ready = false }) {
@@ -31,18 +30,29 @@ export default function Navbar({ ready = false }) {
   return (
     <header
       data-nav
-      className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink-950/80 backdrop-blur-md"
+      className="fixed inset-x-0 top-0 z-50 opacity-0"
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="font-mono text-sm tracking-[0.3em] uppercase">
-          Firma<span className="text-accent">·</span>Ars
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+        <a href="#top" className="flex items-center gap-2.5">
+          <svg
+            width="14"
+            height="12"
+            viewBox="0 0 14 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M7 0L14 12H0L7 0Z" fill="#8052ff" />
+          </svg>
+          <span className="text-sm font-semibold tracking-[0.025em] uppercase">
+            Firma·Ars
+          </span>
         </a>
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-10 md:flex">
           {links.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
-                className="font-mono text-xs tracking-widest text-paper/70 uppercase transition-colors hover:text-accent"
+                className="text-sm font-semibold tracking-[0.025em] text-ash-gray uppercase transition-colors hover:text-bone-white"
               >
                 {link.label}
               </a>
@@ -51,9 +61,9 @@ export default function Navbar({ ready = false }) {
         </ul>
         <a
           href="#kontak"
-          className="rounded-full border border-accent/60 px-4 py-1.5 font-mono text-xs tracking-widest uppercase transition-colors hover:bg-accent hover:text-ink-950"
+          className="rounded-[24px] bg-electric-iris px-5 py-2.5 text-sm font-semibold tracking-[0.025em] text-white uppercase transition-opacity hover:opacity-80"
         >
-          Mulai Proyek
+          Mulai Proyek Desain
         </a>
       </nav>
     </header>

@@ -2,10 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
 const MIN_DISPLAY = 900
-const VIDEO_WEIGHT = 0.8
-const FONTS_WEIGHT = 1 - VIDEO_WEIGHT
 const FONT_CSS =
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;1,400&display=swap'
+  'https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;700&display=swap'
 
 export default function Loader({ onComplete }) {
   const scope = useRef(null)
@@ -24,19 +22,14 @@ export default function Loader({ onComplete }) {
   useEffect(() => {
     const controller = new AbortController()
     const startedAt = performance.now()
-    let videoPct = 0
     let fontsPct = 0
     let lockProgress = false
 
-    const paint = (pct) => {
+    const paint = () => {
       if (lockProgress) return
-      const total = Math.min(
-        100,
-        Math.round(videoPct * VIDEO_WEIGHT + fontsPct * FONTS_WEIGHT),
-      )
-      setProgress(total)
-      if (barRef.current) barRef.current.style.width = `${total}%`
-      if (total >= 100) finish()
+      setProgress(Math.round(fontsPct))
+      if (barRef.current) barRef.current.style.width = `${fontsPct}%`
+      if (fontsPct >= 100) finish()
     }
 
     const finish = () => {
@@ -66,46 +59,14 @@ export default function Loader({ onComplete }) {
       }, wait)
     }
 
-    const loadVideo = async () => {
-      try {
-        const res = await fetch('/hero.mp4', {
-          signal: controller.signal,
-          cache: 'force-cache',
-        })
-        if (!res.ok || !res.body) {
-          videoPct = 100
-          paint()
-          return
-        }
-        const totalBytes = Number(res.headers.get('content-length')) || 0
-        const reader = res.body.getReader()
-        let loaded = 0
-        for (;;) {
-          const { done, value } = await reader.read()
-          if (done) break
-          loaded += value.byteLength
-          videoPct = totalBytes ? (loaded / totalBytes) * 100 : 100
-          paint()
-        }
-        videoPct = 100
-        paint()
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          videoPct = 100
-          paint()
-        }
-      }
-    }
-
     const loadFonts = async () => {
       try {
         await fetch(FONT_CSS, { signal: controller.signal })
         await Promise.all([
-          document.fonts.load('300 16px Inter'),
+          document.fonts.load('200 16px Inter'),
           document.fonts.load('400 16px Inter'),
           document.fonts.load('600 16px Inter'),
           document.fonts.load('700 16px Inter'),
-          document.fonts.load('400 16px "Space Mono"'),
         ])
         fontsPct = 100
       } catch (err) {
@@ -114,7 +75,6 @@ export default function Loader({ onComplete }) {
       paint()
     }
 
-    loadVideo()
     loadFonts()
 
     return () => controller.abort()
@@ -130,33 +90,36 @@ export default function Loader({ onComplete }) {
     <section ref={scope} className="fixed inset-0 z-[100]">
       <div
         data-loader-top
-        className="absolute inset-x-0 top-0 h-1/2 bg-ink-950"
+        className="absolute inset-x-0 top-0 h-1/2 bg-void"
       />
       <div
         data-loader-bottom
-        className="absolute inset-x-0 bottom-0 h-1/2 bg-ink-950"
+        className="absolute inset-x-0 bottom-0 h-1/2 bg-void"
       />
 
       <div
         data-loader-content
         className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6"
       >
-        <p className="font-mono text-xs tracking-[0.35em] text-accent uppercase">
+        <p className="text-xs font-semibold tracking-[0.35em] text-saffron-spark uppercase">
           Firma·Ars
         </p>
         <div className="flex items-baseline gap-2">
           <span
             ref={counterRef}
-            className="font-mono text-6xl font-bold text-paper tabular-nums md:text-8xl"
+            className="text-6xl font-normal text-bone-white tabular-nums md:text-8xl"
           >
             00
           </span>
-          <span className="font-mono text-lg text-paper/40">%</span>
+          <span className="text-lg font-extralight text-ash-gray">%</span>
         </div>
         <div className="h-px w-56 overflow-hidden bg-white/10">
-          <div ref={barRef} className="h-full w-0 bg-accent transition-[width] duration-150 ease-linear" />
+          <div
+            ref={barRef}
+            className="h-full w-0 bg-electric-iris transition-[width] duration-150 ease-linear"
+          />
         </div>
-        <p className="font-mono text-[10px] tracking-[0.3em] text-paper/40 uppercase">
+        <p className="text-[10px] font-light tracking-[0.3em] text-ash-gray uppercase">
           Menyiapkan karya
         </p>
       </div>
