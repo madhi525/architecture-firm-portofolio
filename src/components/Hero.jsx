@@ -1,12 +1,14 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Particles from './Particles.jsx'
 
-gsap.registerPlugin(useGSAP)
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export default function Hero({ ready = false }) {
   const scope = useRef(null)
+  const progressRef = useRef(0)
 
   useGSAP(
     () => {
@@ -31,6 +33,16 @@ export default function Hero({ ready = false }) {
           { opacity: 1, duration: 0.6 },
           '-=0.3',
         )
+
+      ScrollTrigger.create({
+        trigger: scope.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+        onUpdate: (self) => {
+          progressRef.current = self.progress
+        },
+      })
     },
     { scope, dependencies: [ready] },
   )
@@ -103,7 +115,7 @@ export default function Hero({ ready = false }) {
           data-hero-meta
           className="relative h-[42vh] min-h-[280px] md:h-[65vh]"
         >
-          <Particles />
+          <Particles progressRef={progressRef} />
         </div>
       </div>
 
