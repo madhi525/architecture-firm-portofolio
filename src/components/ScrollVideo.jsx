@@ -16,12 +16,13 @@ const GRAIN =
 
 /**
  * Video scroll-scrub — video di-pin dan "diputar" mengikuti scroll.
- * Durasi scroll ±3× durasi video agar gerakannya terasa sinematik.
+ * `scrollFactor` = jumlah viewport (layar penuh) untuk menyelesaikan
+ * 0% → 100%. Default 5 = lima gerakan scroll.
  */
 export default function ScrollVideo({
   src = '/hero.mp4',
   label = 'Film Perusahaan',
-  scrollFactor = 3,
+  scrollFactor = 5,
 }) {
   const scope = useRef(null)
   const videoRef = useRef(null)
@@ -48,7 +49,7 @@ export default function ScrollVideo({
         scrubTrigger = ScrollTrigger.create({
           trigger: scope.current,
           start: 'top top',
-          end: () => `+=${duration * scrollFactor * 100}%`,
+          end: () => `+=${scrollFactor * 100}%`,
           scrub: 1,
           pin: true,
           anticipatePin: 1,
