@@ -7,6 +7,7 @@ import Furniture from './components/Furniture.jsx'
 import Projects from './components/Projects.jsx'
 import About from './components/About.jsx'
 import Footer from './components/Footer.jsx'
+import Particles from './components/Particles.jsx'
 
 export default function App() {
   const [ready, setReady] = useState(false)
@@ -17,6 +18,9 @@ export default function App() {
 
   return (
     <main className="min-h-svh">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <Particles variant="ambient" />
+      </div>
       {!ready && <Loader onComplete={() => setReady(true)} />}
       <Navbar ready={ready} />
       <Hero ready={ready} />
