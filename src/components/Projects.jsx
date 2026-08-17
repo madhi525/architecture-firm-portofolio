@@ -13,12 +13,12 @@ export default function Projects() {
     () => {
       gsap.fromTo(
         '[data-project]',
-        { y: 48, opacity: 0 },
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 0.9,
-          stagger: 0.12,
+          stagger: 0.1,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: scope.current,
@@ -33,51 +33,51 @@ export default function Projects() {
 
   return (
     <section id="proyek" ref={scope} className="mx-auto max-w-6xl px-6 py-28 md:px-10">
-      <div className="mb-14 flex items-end justify-between">
+      <div className="mb-14 grid items-end gap-8 md:grid-cols-2">
         <div>
-          <p className="mb-3 font-mono text-xs tracking-[0.35em] text-accent uppercase">
+          <p className="mb-6 text-sm font-semibold tracking-[0.025em] text-saffron-spark uppercase">
             Selected Works
           </p>
-          <h2 className="text-4xl font-bold tracking-tight uppercase md:text-6xl">
-            Proyek
+          <h2 className="text-4xl font-normal tracking-[-0.03em] uppercase md:text-6xl">
+            Proyek <span className="text-ash-gray">Terpilih</span>
           </h2>
         </div>
-        <p className="hidden max-w-xs text-right text-sm leading-relaxed text-paper/50 md:block">
+        <p className="max-w-sm justify-self-end text-base leading-relaxed font-extralight text-ash-gray md:text-right">
           Empat karya terpilih — dari hunian tepi tebing hingga ruang
           komunal yang dibangun bersama perajin.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <ul>
         {projects.map((project) => (
-          <article
+          <li
             key={project.id}
             data-project
-            className="group relative overflow-hidden rounded-lg border border-white/10 bg-ink-900"
+            className="group grid cursor-pointer grid-cols-[3.5rem_1fr_auto] items-center gap-4 py-8 md:grid-cols-[6rem_1fr_auto_auto_auto]"
           >
-            <div className="aspect-[4/3] overflow-hidden">
-              <div className="flex h-full w-full items-end bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950 p-6 transition-transform duration-700 ease-out group-hover:scale-[1.03]">
-                <span className="font-mono text-6xl font-bold text-paper/10 transition-colors duration-500 group-hover:text-accent/30">
-                  {project.id}
-                </span>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.3em] text-paper/50 uppercase">
-                <span>{project.category}</span>
-                <span>{project.year}</span>
-              </div>
-              <h3 className="mt-3 text-2xl font-semibold tracking-tight">
+            <span className="text-sm font-extralight text-ash-gray">
+              {project.id}
+            </span>
+            <div>
+              <h3 className="text-3xl font-normal tracking-[-0.02em] transition-colors group-hover:text-saffron-spark md:text-5xl">
                 {project.title}
               </h3>
-              <p className="mt-1 text-sm text-paper/50">{project.location}</p>
-              <p className="mt-4 text-sm leading-relaxed text-paper/60">
+              <p className="mt-1 text-sm font-extralight text-silver-mist">
                 {project.description}
               </p>
             </div>
-          </article>
+            <span className="hidden text-sm font-semibold tracking-[0.025em] text-electric-iris uppercase md:block">
+              {project.category}
+            </span>
+            <span className="hidden text-sm font-extralight text-ash-gray md:block">
+              {project.location} · {project.year}
+            </span>
+            <span className="text-xl text-ash-gray transition-all group-hover:translate-x-1.5 group-hover:text-bone-white">
+              →
+            </span>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   )
 }

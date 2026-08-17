@@ -40,6 +40,7 @@ export const projects = [
 export const services = [
   'Arsitektur',
   'Interior',
+  'Perabotan',
   'Masterplan',
   'Konsultasi',
 ]
